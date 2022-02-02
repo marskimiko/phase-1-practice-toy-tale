@@ -15,15 +15,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  const createToy = document.querySelector('h3').addEventListener('submit', handleSubmit)
+  const createToy = document.querySelector('.add-toy-form').addEventListener('submit', (e) => {
+    //e.preventDefault()
+    //console.log('event running')
+    handleSubmit(e)
+  })
   console.log(createToy);
   function handleSubmit(e){
+    //console.log('boop')
     e.preventDefault()
+    //debugger
     let toyObj = {
       name: e.target.name.value,
       image: e.target.image.value,
-      id: e.target.id.value,
-      likes: e.target.likes.value
+      //id: e.target.id.value,
+      likes: 0
     }
     renderOneToy(toyObj)
     adoptToy(toyObj)
@@ -38,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <h2>${toy.name}</h2>
         <img src="${toy.image}" class="toy-avatar" />
         <p>${toy.likes}</p>
-        <button class="like-btn" id="[toy_id]">Like ❤️</button>
+        <button class="like-btn" id="${toy.id}">Like ❤️</button>
       </div>
     `
     allCards.appendChild(card)
@@ -58,18 +64,21 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function adoptToy(toyObj) {
-    fetch('http://localhost:3000/toys'),{
+    console.log(toyObj)
+    fetch('http://localhost:3000/toys',{
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json"
       },
       body: JSON.stringify({
-        "name": " ",
-        "image": " ",
+        "name": toyObj.name,
+        "image": toyObj.image,
         "likes": 0
       })
-    }
+    })
+    .then(res => res.json())
+    .catch(e => console.log(e))
   }
 
   // initial render
