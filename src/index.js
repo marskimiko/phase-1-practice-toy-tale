@@ -48,6 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `
     allCards.appendChild(card)
+    card.querySelector('.like-btn').addEventListener('click', () => {
+      toy.likes += 1
+      card.querySelector('p').textContent = toy.likes
+      updateLike(toy)
+    })
+    
 
     // // add animal card to DOM
     // document.createElement('ul').appendChild(card)
@@ -81,6 +87,20 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(e => console.log(e))
   }
 
+  function updateLike(toyObj) {
+    fetch(`http://localhost:3000/toys/${toyObj.id}`, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      
+      body: JSON.stringify(toyObj)
+    })
+    .then(res => res.json())
+    .then(toy => console.log(toy))
+  }
+
   // initial render
   // get data and render our toys to the dom
   function initialize() {
@@ -88,50 +108,3 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   initialize()
 });
-
-
-
-
-
-
-
-// 1. Access the list of toys from an API (mocked using JSON Server) and render
-//    each of them in a "card" on the page
-// 2. Hook up a form that enables users to add new toys. Create an event listener
-//    so that, when the form is submitted, the new toy is persisted to the database
-//    and a new card showing the toy is added to the DOM
-// 3. Create an event listener that gives users the ability to click a button to
-//    "like" a toy. When the button is clicked, the number of likes should be
-//    updated in the database and the updated information should be rendered to the
-//    DOM
-
-
-// ### Add a New Toy
-
-// When a user submits the toy form, two things should happen:
-
-// - A `POST` request should be sent to `http://localhost:3000/toys` and the new
-//   toy added to Andy's Toy Collection.
-// - If the post is successful, the toy should be added to the DOM without
-//   reloading the page.
-
-// In order to send a POST request via `fetch()`, give the `fetch()` a second
-// argument of an object. This object should specify the method as `POST` and also
-// provide the appropriate headers and the JSON data for the request. The headers
-// and body should look something like this:
-
-// ```js
-// headers:
-// {
-//   "Content-Type": "application/json",
-//   Accept: "application/json"
-// }
-
-// body: JSON.stringify({
-//   "name": "Jessie",
-//   "image": "https://vignette.wikia.nocookie.net/p__/images/8/88/Jessie_Toy_Story_3.png/revision/latest?cb=20161023024601&path-prefix=protagonist",
-//   "likes": 0
-// })
-// ```
-
-// For examples, refer to the [documentation][fetch docs].
